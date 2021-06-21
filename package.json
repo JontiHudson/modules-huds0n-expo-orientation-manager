@@ -1,6 +1,6 @@
 {
   "name": "@huds0n/expo-orientation-manager",
-  "version": "1.5.1-beta.2",
+  "version": "1.5.1-beta3",
   "description": "Expo module for handling orientation",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -15,8 +15,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@huds0n/error": "1.5.1-beta.2",
-    "@huds0n/utilities": "1.5.1-beta.2",
+    "@huds0n/error": "1.5.1-beta3",
+    "@huds0n/utilities": "1.5.1-beta3",
     "expo-constants": "~10.1.3",
     "expo-screen-orientation": "~3.1.0",
     "expo-sensors": "^9.1.0"
