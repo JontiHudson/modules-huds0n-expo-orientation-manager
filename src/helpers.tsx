@@ -157,7 +157,7 @@ export function useOrientationLock(orientation?: Orientation) {
 function checkManifest() {
   if (
     (Platform as PlatformIOSStatic).isPad &&
-    !Constants.manifest.ios?.requireFullScreen
+    !Constants.manifest?.ios?.requireFullScreen
   ) {
     new Huds0nError({
       name: 'Huds0nError',
