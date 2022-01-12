@@ -1,17 +1,11 @@
-import { useOrientation } from '@huds0n/utilities';
+import { useOrientation } from "@huds0n/utilities";
 
 import {
   getDeviceOrientation,
   lockScreen,
   unlockScreen,
   useOrientationLock,
-} from './helpers';
-
-import * as Types from './types';
-
-export namespace OrientationManager {
-  export type Orientation = Types.Orientation;
-}
+} from "./helpers";
 
 export const OrientationManager = {
   getOrientation: getDeviceOrientation,
@@ -20,3 +14,5 @@ export const OrientationManager = {
   useLock: useOrientationLock,
   useOrientation,
 };
+
+export type { Types as OrientationTypes } from "./types";
