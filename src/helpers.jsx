@@ -19,27 +19,29 @@ const OrientationLockPriority = {
     LANDSCAPE_LEFT: [LANDSCAPE_LEFT, LANDSCAPE],
     LANDSCAPE_RIGHT: [LANDSCAPE_RIGHT, LANDSCAPE],
 };
-async function getLockNum(orientation) {
-    if (!orientation) {
+function getLockNum(orientation) {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+        if (!orientation) {
+            return null;
+        }
+        if (orientation === "CURRENT") {
+            return getLockNum(yield getDeviceOrientation());
+        }
+        const [primaryLock, secondaryLock] = OrientationLockPriority[orientation];
+        if (primaryLock !== null &&
+            (yield ScreenOrientation.supportsOrientationLockAsync(primaryLock))) {
+            return primaryLock;
+        }
+        if (secondaryLock !== null &&
+            (yield ScreenOrientation.supportsOrientationLockAsync(secondaryLock))) {
+            return secondaryLock;
+        }
         return null;
-    }
-    if (orientation === "CURRENT") {
-        return getLockNum(await getDeviceOrientation());
-    }
-    const [primaryLock, secondaryLock] = OrientationLockPriority[orientation];
-    if (primaryLock !== null &&
-        (await ScreenOrientation.supportsOrientationLockAsync(primaryLock))) {
-        return primaryLock;
-    }
-    if (secondaryLock !== null &&
-        (await ScreenOrientation.supportsOrientationLockAsync(secondaryLock))) {
-        return secondaryLock;
-    }
-    return null;
+    });
 }
 function getDeviceOrientation() {
-    return new Promise(async (resolve) => {
-        if (expo_constants_1.default.isDevice && (await expo_sensors_1.DeviceMotion.isAvailableAsync())) {
+    return new Promise((resolve) => (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+        if (expo_constants_1.default.isDevice && (yield expo_sensors_1.DeviceMotion.isAvailableAsync())) {
             const listener = expo_sensors_1.DeviceMotion.addListener(({ accelerationIncludingGravity: { x, y, z } }) => {
                 listener.remove();
                 if (Math.pow(x, 2) > Math.pow(y, 2) &&
@@ -56,7 +58,7 @@ function getDeviceOrientation() {
         else {
             resolve(null);
         }
-    });
+    }));
 }
 exports.getDeviceOrientation = getDeviceOrientation;
 const lockMap = new Map();
@@ -66,28 +68,32 @@ function getCurrentOrientationLock() {
     }
     return [...lockMap.values()][lockMap.size - 1];
 }
-async function lockScreen(id, orientation = "CURRENT") {
-    checkManifest();
-    if (orientation === "ALL" || orientation === "DEFAULT") {
-        await lockScreen(id, "CURRENT");
-    }
-    const lockNum = await getLockNum(orientation);
-    if (lockNum !== null) {
-        await ScreenOrientation.lockAsync(lockNum);
-        lockMap.set(id, lockNum);
-        return true;
-    }
-    return false;
+function lockScreen(id, orientation = "CURRENT") {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+        checkManifest();
+        if (orientation === "ALL" || orientation === "DEFAULT") {
+            yield lockScreen(id, "CURRENT");
+        }
+        const lockNum = yield getLockNum(orientation);
+        if (lockNum !== null) {
+            yield ScreenOrientation.lockAsync(lockNum);
+            lockMap.set(id, lockNum);
+            return true;
+        }
+        return false;
+    });
 }
 exports.lockScreen = lockScreen;
-async function unlockScreen(id) {
-    lockMap.delete(id);
-    const newLock = getCurrentOrientationLock();
-    if (newLock === 0 || newLock === 1) {
-        const lockNum = await getLockNum(await getDeviceOrientation());
-        lockNum && (await ScreenOrientation.lockAsync(lockNum));
-    }
-    await ScreenOrientation.lockAsync(newLock);
+function unlockScreen(id) {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+        lockMap.delete(id);
+        const newLock = getCurrentOrientationLock();
+        if (newLock === 0 || newLock === 1) {
+            const lockNum = yield getLockNum(yield getDeviceOrientation());
+            lockNum && (yield ScreenOrientation.lockAsync(lockNum));
+        }
+        yield ScreenOrientation.lockAsync(newLock);
+    });
 }
 exports.unlockScreen = unlockScreen;
 function useOrientationLock(orientation) {
@@ -105,8 +111,9 @@ function useOrientationLock(orientation) {
 }
 exports.useOrientationLock = useOrientationLock;
 function checkManifest() {
+    var _a, _b;
     if (react_native_1.Platform.isPad &&
-        !expo_constants_1.default.manifest?.ios?.requireFullScreen) {
+        !((_b = (_a = expo_constants_1.default.manifest) === null || _a === void 0 ? void 0 : _a.ios) === null || _b === void 0 ? void 0 : _b.requireFullScreen)) {
         new error_1.default({
             name: "Huds0nError",
             code: "MISSING_ORIENTATION_PERMISSIONS",
